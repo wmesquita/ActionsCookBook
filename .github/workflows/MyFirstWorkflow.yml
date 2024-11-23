@@ -1,44 +1,45 @@
-# A first worklow to play around with the editor
+# A first workflow to play around with the editor
 name: My First Workflow
-on: 
+on:
   push:
-    branches:
+    branches: 
       - main
   workflow_dispatch:
+
 jobs:
   first_job:
-    name:  My first job
+    name: My first job
     runs-on: ubuntu-latest
     steps:
-      - name: Greet the user
-        run: |
-          echo "Hello ${{ vars.WHO_TO_GREET }}, from ${{ github.actor }}!"
-          echo "Current branch is ${{ github.ref }}"
-          echo "My secret is \"${{ secrets.MY_SECRET }}\"."
-        shell: bash
+      - run: |
+          echo "Hello ${{ vars.WHO_TO_GREET }} 👋 from ${{ github.actor }}." 
+          echo "My secret is 🤫 ${{ secrets.MY_SECRET }}."
+          echo "Current branch is '${{ github.ref }}'."
       - name: Checkout
-        uses: actions/checkout@v4.2.2
-      - name: Display the tree
-        run: tree
+        uses: actions/checkout@v4.1.0
+      - run: tree
+
   Test:
     runs-on: ubuntu-latest
     environment: Test
-    needs: [first_job]
+    needs: first_job
     steps:
-      - run: |
-          echo "Hello ${{ vars.WHO_TO_GREET }}, from ${{ github.actor }}!"
-          sec=$(echo ${{ secrets.MY_SECRET }})
-          echo "My secret is '$sec'."
+    - run: |
+        echo "Hello ${{ vars.WHO_TO_GREET }} 👋 from ${{ github.actor }}." 
+        sec=$(echo ${{ secrets.MY_SECRET }} | sed 's/./& /g')
+        echo "My secret is 🤫 '$sec'."
+      
   Load-Test:
     runs-on: ubuntu-latest
     environment: Load-Test
-    needs: [first_job]
+    needs: first_job
     steps:
-      - run: |
-          echo "Hello ${{ vars.WHO_TO_GREET }}, from ${{ github.actor }}!"
-          sec=$(echo ${{ secrets.MY_SECRET }} | sed 's/./& /g')
-          echo "My secret is '$sec'."
-          echo "My secret is 🤫 '$sec'."
+    - run: |
+        echo "Hello ${{ vars.WHO_TO_GREET }} 👋 from ${{ github.actor }}." 
+        sec=$(echo ${{ secrets.MY_SECRET }} | sed 's/./& /g')
+        echo "My secret is 🤫 '$sec'."
+        sleep 15
+      
   Production:
     runs-on: ubuntu-latest
     environment: 
@@ -46,8 +47,8 @@ jobs:
       url: https://writeabout.net
     needs: [Test, Load-Test]
     steps:
-      - run: |
-          echo "Hello ${{ vars.WHO_TO_GREET }}, from ${{ github.actor }}!"
-          sec=$(echo ${{ secrets.MY_SECRET }})
-          echo "My secret is '$sec'."
-    
+    - run: |
+        echo "Hello ${{ vars.WHO_TO_GREET }} 👋 from ${{ github.actor }}." 
+        sec=$(echo ${{ secrets.MY_SECRET }} | sed 's/./& /g')
+        echo "My secret is 🤫 '$sec'."
+        sleep 15
